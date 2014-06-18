@@ -62,9 +62,6 @@ setup(
     description='An awesome-sauce Python library for accessing the Authorize.net API. Sweet!',
     long_description=__doc__,
     license='MIT',
-    install_requires=[
-        'suds>=0.4',
-    ],
     packages=[
         'authorize',
         'authorize.apis',
