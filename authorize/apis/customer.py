@@ -9,16 +9,18 @@ from authorize.data import Address, CreditCard
 from authorize.apis.transaction import parse_response
 from authorize.exceptions import AuthorizeConnectionError, \
     AuthorizeError, AuthorizeResponseError, AuthorizeInvalidError
+from urllib.parse import urlencode
 
 PROD_URL = 'https://api.authorize.net/soap/v1/Service.asmx?WSDL'
 TEST_URL = 'https://apitest.authorize.net/soap/v1/Service.asmx?WSDL'
+
 
 class CustomerAPI(object):
     def __init__(self, login_id, transaction_key, debug=True, test=False):
         self.url = TEST_URL if debug else PROD_URL
         self.login_id = login_id
         self.transaction_key = transaction_key
-        self.transaction_options = urllib.urlencode({
+        self.transaction_options = urlencode({
             'x_version': '3.1',
             'x_test_request': 'Y' if test else 'F',
             'x_delim_data': 'TRUE',
@@ -180,7 +182,7 @@ class CustomerAPI(object):
             exp = CreditCard.exp_time(kwargs['exp_month'], kwargs['exp_year'])
             if exp <= datetime.now():
                 raise AuthorizeInvalidError('This credit card has expired.')
-            card_simple_type.expirationDate =\
+            card_simple_type.expirationDate = \
                 '{0}-{1:0>2}'.format(kwargs['exp_year'], kwargs['exp_month'])
         else:
             card_simple_type.expirationDate = date
